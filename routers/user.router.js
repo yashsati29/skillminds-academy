@@ -1,7 +1,10 @@
 const express = require("express");
+
+const userCoursesRouter = require("./user-courses.router");
+
 const router = express.Router();
 
-router.get("/purchases", (req, res) => {});
+router.use("/courses", userCoursesRouter);
 
 router.post("/signup", (req, res) => {});
 router.post("/signin", (req, res) => {});
