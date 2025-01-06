@@ -1,8 +1,8 @@
 const express = require("express");
-const coursesRouter = express.Router();
+const router = express.Router();
 
-coursesRouter.get("/view", (req, res) => {});
+router.get("/view", (req, res) => {});
 
-coursesRouter.post("/purchase", (req, res) => {});
+router.post("/purchase", (req, res) => {});
 
-module.exports = coursesRouter;
+module.exports = router;
