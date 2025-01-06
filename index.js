@@ -1,15 +1,15 @@
+require("dotenv").config();
 const express = require("express");
 const { connect } = require("mongoose");
 
+const { MONGODB_CONNECTION_STRING } = require("./config");
 const userRouter = require("./routers/user.router");
 
 const app = express();
 
 app.use("/api/v1/user", userRouter);
 
-connect(
-  "mongodb+srv://admin:Test%401234@cluster0.vr1yl.mongodb.net/skillminds-academy"
-)
+connect(MONGODB_CONNECTION_STRING)
   .then(() =>
     app.listen(3000, () => console.log("Server is running on port 3000"))
   )
