@@ -11,16 +11,13 @@ const router = Router();
 
 router.get("/view", (req, res) => {
   const token = req.headers.token;
-  const findCourses = (query) =>
-    CoursesModel.find(query)
-      .then((courses) =>
-        res.status(200).json({ courses, message: "Fetched all courses!" })
-      )
-      .catch(() =>
-        res.status(500).json({
-          message: "Error while fetching the courses, please try again!",
-        })
-      );
+
+  const findCourses = async (query) => {
+    const courses = await CoursesModel.find(query);
+
+    if (courses) return res.status(200).json({ courses });
+    else return res.status(200).json({ message: "Failed to fetch courses!" });
+  };
 
   if (!token) findCourses();
   else {
