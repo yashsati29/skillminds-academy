@@ -2,6 +2,8 @@ const { Router } = require("express");
 const jwt = require("jsonwebtoken");
 
 const { JWT_TOKEN_SECRET } = require("../config");
+
+const authMiddleware = require("../middlewares/auth.middleware");
 const CoursesModel = require("../models/courses.model");
 
 const router = Router();
@@ -26,7 +28,37 @@ router.get("/view", (req, res) => {
   }
 });
 
+router.use(authMiddleware);
+
 router.get("/purchased", (req, res) => {});
+
+router.post("/create", (req, res) => {
+  const {
+    body: { title, description, price, imageUrl },
+    userId,
+  } = req;
+
+  const course = new CoursesModel({
+    title,
+    description,
+    price,
+    imageUrl,
+    creatorId: userId,
+  });
+
+  course
+    .save()
+    .then(() =>
+      res
+        .status(200)
+        .json({ message: "Your course has been created successfully!" })
+    )
+    .catch(() =>
+      res
+        .status(400)
+        .json({ message: "Failed to create your course, please try again!" })
+    );
+});
 
 router.post("/purchase", (req, res) => {});
 
