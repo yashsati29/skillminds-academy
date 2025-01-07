@@ -29,7 +29,22 @@ router.get("/view", (req, res) => {
 
 router.use(authMiddleware);
 
-router.get("/purchased", (req, res) => {});
+router.get("/purchased", async (req, res) => {
+  const { userId } = req;
+
+  const purchases = await PurchasesModel.find({ userId });
+
+  if (!purchases.length)
+    return res.send(400).json({ message: "No purchase history for the user!" });
+
+  const purchaseCourseIds = purchases.map(({ courseId }) => courseId);
+
+  CoursesModel.find({
+    _id: { $in: purchaseCourseIds },
+  })
+    .then((courses) => res.send(200).json({ courses }))
+    .catch(() => res.status(400).json({ message: "Failed to fetch courses!" }));
+});
 
 router.post("/create", async (req, res) => {
   const {
