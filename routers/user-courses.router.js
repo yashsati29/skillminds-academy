@@ -51,9 +51,7 @@ router.post("/create", async (req, res) => {
 
   await course.save();
 
-  return res
-    .status(200)
-    .json({ message: "Your course has been created successfully!" });
+  return res.status(200).json({ message: "Course creation success!" });
 });
 
 router.post("/purchase", (req, res) => {});
@@ -67,14 +65,8 @@ router.delete("/delete", (req, res) => {
   } = req;
 
   CoursesModel.deleteOne({ creatorId, _id: courseId })
-    .then(() =>
-      res.status(200).json({ message: "Course deleted successfully!" })
-    )
-    .catch(() =>
-      res
-        .status(400)
-        .json({ message: "Failed to delete course, please try again!" })
-    );
+    .then(() => res.status(200).json({ message: "Course deletion success!" }))
+    .catch(() => res.status(400).json({ message: "Course deletion failed!" }));
 });
 
 module.exports = router;
