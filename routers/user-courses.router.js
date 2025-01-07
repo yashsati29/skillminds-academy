@@ -101,7 +101,7 @@ router.post("/purchase", async (req, res) => {
 router.put("/update", (req, res) => {
   const {
     userId: creatorId,
-    body: { title, description, price, imageUrl },
+    body: { title, description, price, imageUrl, courseId },
   } = req;
 
   CoursesModel.updateOne(
