@@ -42,7 +42,7 @@ router.get("/purchased", async (req, res) => {
   CoursesModel.find({
     _id: { $in: purchaseCourseIds },
   })
-    .then((courses) => res.send(200).json({ courses }))
+    .then((courses) => res.status(200).json({ courses }))
     .catch(() => res.status(400).json({ message: "Failed to fetch courses!" }));
 });
 
