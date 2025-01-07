@@ -64,6 +64,21 @@ router.post("/purchase", (req, res) => {});
 
 router.put("/update", (req, res) => {});
 
-router.delete("/delete", (req, res) => {});
+router.delete("/delete", (req, res) => {
+  const {
+    userId: creatorId,
+    body: { courseId },
+  } = req;
+
+  CoursesModel.deleteOne({ creatorId, _id: courseId })
+    .then(() =>
+      res.status(200).json({ message: "Course deleted successfully!" })
+    )
+    .catch(() =>
+      res
+        .status(400)
+        .json({ message: "Failed to delete course, please try again!" })
+    );
+});
 
 module.exports = router;
