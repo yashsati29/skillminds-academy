@@ -76,11 +76,11 @@ router.post("/purchase", async (req, res) => {
     userId,
     body: { courseId },
   } = req;
-  const course = await CoursesModel.findOne({ courseId });
+  const course = await CoursesModel.findById({ _id: courseId });
 
   if (!course)
     return res.status(400).json({ message: "Course not available!" });
-  else if (course.creatorId === userId)
+  else if (course.creatorId.toString() === userId)
     return res
       .status(400)
       .json({ message: "Creators cannot purchase their own course!" });
