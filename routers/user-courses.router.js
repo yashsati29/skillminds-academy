@@ -119,7 +119,13 @@ router.delete("/delete", (req, res) => {
   } = req;
 
   CoursesModel.deleteOne({ creatorId, _id: courseId })
-    .then(() => res.status(200).json({ message: "Course deletion success!" }))
+    .then(({ deletedCount }) =>
+      deletedCount
+        ? res.status(200).json({ message: "Course deletion success!" })
+        : res
+            .status(400)
+            .json({ message: "Cannot delete other creator's course!" })
+    )
     .catch(() => res.status(400).json({ message: "Course deletion failed!" }));
 });
 
