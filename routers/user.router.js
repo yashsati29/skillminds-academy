@@ -13,7 +13,7 @@ router.use("/courses", userCoursesRouter);
 
 router.post("/signup", (req, res) => {
   const { email, password, firstName, lastName, isCreator } = req.body;
-  const passwordHash = bcrypt.hashSync(password, HASH_SALT_ROUNDS);
+  const passwordHash = bcrypt.hashSync(password, Number(HASH_SALT_ROUNDS));
 
   const user = new UsersModel({
     firstName,
