@@ -6,7 +6,7 @@ const CourseSchema = new Schema({
   description: String,
   price: { type: Number, required: true },
   imageUrl: String,
-  creatorId: { type: ObjectId, ref: "users", required: true, unique: true },
+  creatorId: { type: ObjectId, ref: "users", required: true },
 });
 
 module.exports = CourseSchema;
