@@ -61,8 +61,16 @@ router.post("/purchase", async (req, res) => {
     userId,
     body: { courseId },
   } = req;
+  const course = await CoursesModel.findOne({ courseId });
 
-  const isAlreadyPurchased = await PurchasesModel.findOne((userId, courseId));
+  if (!course)
+    return res.status(400).json({ message: "Course not available!" });
+  else if (course.creatorId === userId)
+    return res
+      .status(400)
+      .json({ message: "Creators cannot purchase their own course!" });
+
+  const isAlreadyPurchased = await PurchasesModel.findOne({ userId, courseId });
 
   if (isAlreadyPurchased)
     return res.status(400).json({ message: "Course already purchased!" });
