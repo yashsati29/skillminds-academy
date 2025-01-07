@@ -49,9 +49,10 @@ router.post("/create", async (req, res) => {
     creatorId: userId,
   });
 
-  await course.save();
-
-  return res.status(200).json({ message: "Course creation success!" });
+  await course
+    .save()
+    .then(() => res.status(200).json({ message: "Course creation success!" }))
+    .catch(() => res.status(400).json({ message: "Course creation failed!" }));
 });
 
 router.post("/purchase", (req, res) => {});
