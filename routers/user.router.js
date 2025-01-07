@@ -16,10 +16,10 @@ router.post("/signup", (req, res) => {
   const passwordHash = bcrypt.hashSync(password, HASH_SALT_ROUNDS);
 
   const user = new UsersModel({
-    email,
-    password: passwordHash,
     firstName,
     lastName,
+    email,
+    password: passwordHash,
     isCreator,
   });
 
