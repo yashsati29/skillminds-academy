@@ -1,7 +1,8 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
-const { HASH_SALT_ROUNDS } = require("../config");
+const { HASH_SALT_ROUNDS, JWT_TOKEN_SECRET } = require("../config");
 
 const userCoursesRouter = require("./user-courses.router");
 const UsersModel = require("../models/users.model");
@@ -30,6 +31,18 @@ router.post("/signup", (req, res) => {
 
 router.post("/signin", (req, res) => {
   const { email, password } = req.body;
+
+  UsersModel.findOne({ email }, (err, user) => {
+    if (err) return res.status(401).message({ message: "Invalid email!" });
+
+    const doesPasswordMatch = bcrypt.compareSync(password, user.password);
+
+    if (doesPasswordMatch) {
+      const token = jwt.sign({ userId: user._id }, JWT_TOKEN_SECRET);
+
+      return res.status(200).json({ token, message: "Signin successful!" });
+    } else return res.status(401).json({ message: "Invalid password!" });
+  });
 });
 
 module.exports = router;
