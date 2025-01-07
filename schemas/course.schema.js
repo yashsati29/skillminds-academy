@@ -1,7 +1,7 @@
 const { Schema } = require("mongoose");
 const { ObjectId } = Schema;
 
-const courseSchema = new Schema({
+const CourseSchema = new Schema({
   title: String,
   description: String,
   price: Number,
@@ -9,4 +9,4 @@ const courseSchema = new Schema({
   creatorId: ObjectId,
 });
 
-module.exports = courseSchema;
+module.exports = CourseSchema;
