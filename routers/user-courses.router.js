@@ -5,6 +5,7 @@ const { JWT_TOKEN_SECRET } = require("../config");
 
 const authMiddleware = require("../middlewares/auth.middleware");
 const CoursesModel = require("../models/courses.model");
+const UsersModel = require("../models/users.model");
 
 const router = Router();
 
@@ -32,11 +33,16 @@ router.use(authMiddleware);
 
 router.get("/purchased", (req, res) => {});
 
-router.post("/create", (req, res) => {
+router.post("/create", async (req, res) => {
   const {
     body: { title, description, price, imageUrl },
     userId,
   } = req;
+
+  const user = await UsersModel.findById({ _id: userId });
+
+  if (!user || !user.isCreator)
+    return res.status(400).json({ message: "Unauthorised access!" });
 
   const course = new CoursesModel({
     title,
@@ -46,18 +52,11 @@ router.post("/create", (req, res) => {
     creatorId: userId,
   });
 
-  course
-    .save()
-    .then(() =>
-      res
-        .status(200)
-        .json({ message: "Your course has been created successfully!" })
-    )
-    .catch(() =>
-      res
-        .status(400)
-        .json({ message: "Failed to create your course, please try again!" })
-    );
+  await course.save();
+
+  return res
+    .status(200)
+    .json({ message: "Your course has been created successfully!" });
 });
 
 router.post("/purchase", (req, res) => {});
