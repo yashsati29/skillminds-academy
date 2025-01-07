@@ -6,6 +6,7 @@ const { JWT_TOKEN_SECRET } = require("../config");
 const authMiddleware = require("../middlewares/auth.middleware");
 const CoursesModel = require("../models/courses.model");
 const UsersModel = require("../models/users.model");
+const PurchasesModel = require("../models/purchases.model");
 
 const router = Router();
 
@@ -49,13 +50,30 @@ router.post("/create", async (req, res) => {
     creatorId: userId,
   });
 
-  await course
+  course
     .save()
     .then(() => res.status(200).json({ message: "Course creation success!" }))
     .catch(() => res.status(400).json({ message: "Course creation failed!" }));
 });
 
-router.post("/purchase", (req, res) => {});
+router.post("/purchase", async (req, res) => {
+  const {
+    userId,
+    body: { courseId },
+  } = req;
+
+  const isAlreadyPurchased = await PurchasesModel.findOne((userId, courseId));
+
+  if (isAlreadyPurchased)
+    return res.status(400).json({ message: "Course already purchased!" });
+
+  const newPurchase = new PurchasesModel({ userId, courseId });
+
+  newPurchase
+    .save()
+    .then(() => res.status(200).json({ message: "Course purchase success!" }))
+    .catch(() => res.status(400).json({ message: "Course purchase failed!" }));
+});
 
 router.put("/update", (req, res) => {});
 
