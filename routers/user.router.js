@@ -32,17 +32,17 @@ router.post("/signup", (req, res) => {
 router.post("/signin", (req, res) => {
   const { email, password } = req.body;
 
-  UsersModel.findOne({ email }, (err, user) => {
-    if (err) return res.status(401).message({ message: "Invalid email!" });
+  UsersModel.findOne({ email })
+    .then((user) => {
+      const doesPasswordMatch = bcrypt.compareSync(password, user.password);
 
-    const doesPasswordMatch = bcrypt.compareSync(password, user.password);
+      if (doesPasswordMatch) {
+        const token = jwt.sign({ userId: user._id }, JWT_TOKEN_SECRET);
 
-    if (doesPasswordMatch) {
-      const token = jwt.sign({ userId: user._id }, JWT_TOKEN_SECRET);
-
-      return res.status(200).json({ token, message: "Signin successful!" });
-    } else return res.status(401).json({ message: "Invalid password!" });
-  });
+        return res.status(200).json({ token, message: "Signin successful!" });
+      } else return res.status(401).json({ message: "Invalid password!" });
+    })
+    .catch(() => res.status(401).message({ message: "Invalid email!" }));
 });
 
 module.exports = router;
