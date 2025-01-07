@@ -98,7 +98,19 @@ router.post("/purchase", async (req, res) => {
     .catch(() => res.status(400).json({ message: "Course purchase failed!" }));
 });
 
-router.put("/update", (req, res) => {});
+router.put("/update", (req, res) => {
+  const {
+    userId: creatorId,
+    body: { title, description, price, imageUrl },
+  } = req;
+
+  CoursesModel.updateOne(
+    { _id: courseId, creatorId },
+    { title, description, price, imageUrl }
+  )
+    .then(() => res.status(200).json({ message: "Course update success!" }))
+    .catch(() => res.status(400).json({ message: "Course update failed!" }));
+});
 
 router.delete("/delete", (req, res) => {
   const {
